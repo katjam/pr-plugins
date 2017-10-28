@@ -19,8 +19,8 @@ function pr_init_settings()
     'date_format' => __('j F Y'),
     'permalink_structure' => '/%postname%/',
   );
-  foreach ($core_settings as $k => $v) {
-    update_option($k, $v);
+  foreach ( $core_settings as $k => $v ) {
+    update_option( $k, $v );
   }
   // Delete dummy content.
   wp_delete_post(1, true);
@@ -44,22 +44,41 @@ function pr_add_pages()
     40  => 'Case Studies',
     50  => 'Areas we cover',
   );
-  foreach ($titles as $menu_order => $title) {
+  foreach ( $titles as $menu_order => $title ) {
     $parent_pages[$menu_order]['title']   = $title;
     $parent_pages[$menu_order]['content'] = 'Please add content for ' . $title . '<br/>' . $lorem;
   }
-  foreach ($parent_pages as $p => $content) {
-    if (!get_page_by_title($content['title'])) {
+  $menu_name = 'PR Main Nav';
+  $menu_loc = 'primary_navigation';
+  $menu_exists = wp_get_nav_menu_object( $menu_name );
+  $menu_id = null;
+  if ( !$menu_exists ) { $menu_id = wp_create_nav_menu( $menu_name ); }
+  $locs = get_theme_mod( 'nav_menu_locations' );
+  $locs[$menu_loc] = $menu_id;
+  set_theme_mod( 'nav_menu_locations', $locs);
+  foreach ( $parent_pages as $p => $content ) {
+    if (!get_page_by_title( $content['title'] )) {
+      $slug = sanitize_title( $content['title'] );
       $page = array(
         'post_author' => 1,
         'post_content' => $content['content'],
         'post_title' => $content['title'],
-        'post_name' => sanitize_title($content['title']),
+        'post_name' => $slug,
         'post_type' => 'page',
         'post_status' => 'publish',
         'menu_order' => $p,
       );
       wp_insert_post($page);
+
+      //if ( $content['title'] !== 'About Us' ) {
+        wp_update_nav_menu_item($menu_id, 0, array(
+          'menu-item-title' => $content['title'],
+          'menu-item-object' => 'page',
+          'menu-item-object-id' => get_page_by_path( $slug )->ID,
+          'menu-item-type' => 'post_type',
+          'menu-item-status' => 'publish')
+        );
+      //}
     }
   }
 
@@ -72,4 +91,6 @@ function pr_add_pages()
   // Set the blog page
   $blog   = get_page_by_title( 'Case Studies' );
   update_option( 'page_for_posts', $blog->ID );
+
+  // Add pages to primary Nav
 }
