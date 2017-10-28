@@ -62,4 +62,14 @@ function pr_add_pages()
       wp_insert_post($page);
     }
   }
+
+  // Set About as the home page and case studies as the posts page.
+  // Use a static front page
+  $about = get_page_by_title( 'About Us' );
+  update_option( 'page_on_front', $about->ID );
+  update_option( 'show_on_front', 'page' );
+
+  // Set the blog page
+  $blog   = get_page_by_title( 'Case Studies' );
+  update_option( 'page_for_posts', $blog->ID );
 }
