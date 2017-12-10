@@ -15,7 +15,7 @@ function pr_init_settings()
     'default_comment_status' => 'closed',
     'default_role' => 'author',
     'comments_per_page' => 0,
-    'blogdescription' => __('Chartered Building Surveyors & Commercial Property Consultants'),
+    'blogdescription' => __('Chartered Building Surveyors & Commercial Property Agents'),
     'date_format' => __('j F Y'),
     'permalink_structure' => '/%postname%/',
   );
@@ -42,7 +42,8 @@ function pr_add_pages()
     10  => 'Building Surveying',
     20  => 'Commercial Agency',
     40  => 'Case Studies',
-    50  => 'Areas we cover',
+    50  => 'Areas We Cover',
+    60  => 'Contact Us',
   );
   foreach ( $titles as $menu_order => $title ) {
     $parent_pages[$menu_order]['title']   = $title;
@@ -87,10 +88,6 @@ function pr_add_pages()
   $about = get_page_by_title( 'About Us' );
   update_option( 'page_on_front', $about->ID );
   update_option( 'show_on_front', 'page' );
-
-  // Set the blog page
-  $blog   = get_page_by_title( 'Case Studies' );
-  update_option( 'page_for_posts', $blog->ID );
 
   // Add pages to primary Nav
 }

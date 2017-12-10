@@ -35,8 +35,8 @@ class pr_address_widget extends WP_Widget
         $text = '
         <div class="address">
            Philips Rogers Ltd<br>
-           Address<br>
-           Town POSTCODE<br>
+           Trudgeon Halling, The Platt<br>
+           Wadebridge PL27 7AE<br>
         </div>
         ';
         if( !empty( $instance['text'] ) ) {

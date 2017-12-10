@@ -34,10 +34,9 @@ class pr_contact_widget extends WP_Widget
 
         $text = '
      <div>
-       <span class="mailto"><a href="mailto:pwiltshire@philipsrogers.co.uk" class="mailto"><i class="fa fa-envelope"></i></a> <a href="mailto:pwiltshire@philipsrogers.co.uk">pwiltshire@philipsrogers.co.uk</a></span>
+       <span class="mailto"><a href="mailto:info@philipsrogers.co.uk" class="mailto"><i class="fa fa-envelope"></i></a> <a href="mailto:info@philipsrogers.co.uk">info@philipsrogers.co.uk</a></span>
         <div class="numbers">
            <span><i class="fa fa-phone"></i> 01208 812 812</span>
-           <span><i class="fa fa-mobile"></i> 0790 700 7000</span>
        </div>
     </div>
         ';
