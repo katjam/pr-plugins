@@ -32,7 +32,7 @@ class pr_social_profile_widget extends WP_Widget
             $title = $instance['title'];
         }
 
-        $text = 
+        $text = '
         <div>
            <a href="https://twitter.com/Philips_Rogers" title="Follow Philips Rogers on Twitter" target="_blank"><i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i></a>
            <a href="https://uk.linkedin.com/in/company/philips-rogers-ltd" title="View Philips Rogers\'s Linkedin Profile" target="_blank"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a>
