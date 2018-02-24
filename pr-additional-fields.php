@@ -10,7 +10,7 @@ Author: katjam
 */
 function pr_metabox_img_text() {
   add_meta_box(
-    'img-text',
+    'pr_img_text_sets',
     'Image with Text',
     'pr_img_text_metabox_content',
     'page',
@@ -25,7 +25,7 @@ add_action( 'add_meta_boxes', 'pr_metabox_img_text' );
  */
 function pr_img_text_defaults() {
   return array(
-    'image' => null,
+    'image' => '',
     'heading' => '',
     'text' => '',
   );
@@ -37,19 +37,69 @@ function pr_img_text_defaults() {
 function pr_img_text_metabox_content() {
   global $post; // The current post
   wp_nonce_field( basename( __FILE__ ), 'pr_nonce' );
-  $img_text_sets = ['image', 'heading', 'text'];
-  foreach ($img_text_sets as $field) {
-      $saved[$field] = get_post_meta( $post->ID, 'pr_img_text_'.$field, true );
-  }
+  $img_text_sets = get_post_meta( $post->ID, 'pr_img_text_sets', true );
   $defaults = pr_img_text_defaults();
-  $details = wp_parse_args ( $saved, $defaults );
 ?>
-  <label for="heading">Heading</label>
-  <input id="heading" name="heading" type="text" value="<?php echo $details['heading'] ?>" />
-  <label for="text">Text</label>
-  <input id="text" name="text" type="textbox" value="<?php echo $details['text'] ?>" />
-  <label for="image">Image</label>
-  <input id="image" name="image" type="text" value="<?php echo $details['image'] ?>" />
+
+  <script type="text/javascript">
+  jQuery(document).ready(function( $ ){
+      $( '#add-row' ).on('click', function() {
+          var row = $( '.empty-row.screen-reader-text' ).clone(true);
+          row.removeClass( 'empty-row screen-reader-text' );
+          row.insertBefore( '#pr-img-text-sets tbody>tr:last' );
+          return false;
+      });
+
+      $( '.remove-row' ).on('click', function() {
+          $(this).parents('tr').remove();
+          return false;
+      });
+  });
+  </script>
+  <table id="pr-img-text-sets" width="100%">
+    <thead>
+        <tr>
+            <th width="30%">Heading</th>
+            <th width="30%">Text</th>
+            <th width="30%">Image</th>
+            <th width="8%"></th>
+        </tr>
+    </thead>
+    <tbody>
+<?php
+  if ( $img_text_sets ) :
+    foreach ( $img_text_sets as $field ) {
+?><tr>
+    <td><input name="heading[]" type="text" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
+    <td><input name="text[]" type="text" value="<?php echo $field['text'] ? $field['text'] : $defaults['text'] ?>" /></td>
+    <td><input name="image[]" type="text" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" /></td>
+    <td><a class="button remove-row" href="#">Remove</a></td>
+  </tr>
+<?php
+    }
+  else :
+  // A blank row.
+?>  <tr>
+      <td><input name="heading[]" type="text" value="<?php echo $defaults['heading'] ?>" /></td>
+      <td><input name="text[]" type="textbox" value="<?php echo $defaults['text'] ?>" /></td>
+      <td><input name="image[]" type="text" value="<?php echo $defaults['image'] ?>" /></td>
+      <td><a class="button remove-row" href="#">Remove</a></td>
+    </tr>
+<?php endif; ?>
+
+<!-- A blank row for jquery add another -->
+  <tr class="empty-row screen-reader-text">
+    <td><input name="heading[]" type="text" value="<?php echo $defaults['heading'] ?>" /></td>
+    <td><input name="text[]" type="textbox" value="<?php echo $defaults['text'] ?>" /></td>
+    <td><input name="image[]" type="text" value="<?php echo $defaults['image'] ?>" /></td>
+    <td><a class="button remove-row" href="#">Remove</a></td>
+  </tr>
+</tbody>
+</table>
+
+<p><a id="add-row" class="button" href="#">Add another</a></p>
+
+
 <?php
 }
 
@@ -69,17 +119,34 @@ function pr_img_text_meta_save( $post_id ) {
       return;
   }
 
-  // Checks for input and saves if needed
-  $img_text_sets = ['image', 'heading', 'text'];
-  foreach ( $img_text_sets as $field ) {
-    if ( isset( $_POST[ $field ] ) ) {
-      update_post_meta(
-        $post_id,
-        'pr_img_text_' . $field,
-        $_POST[ $field ]
-      );
-    }
+  $old = get_post_meta( $post_id, 'pr_img_text_sets', true );
+  $new = [];
+
+  $headings = $_POST['heading'];
+  $texts = $_POST['text'];
+  $images = $_POST['image'];
+
+  $count = count ( $headings );
+
+  for ( $i = 0; $i < $count; $i++ ) {
+    if ( $headings[$i] != '' ) :
+      $new[$i]['heading'] = stripslashes( strip_tags( $headings[$i] ) );
+
+      if ( $texts[$i] != '' )
+          $new[$i]['text'] = $texts[$i];
+      else
+          $new[$i]['text'] = '';
+
+      if ( $images[$i] != '' )
+          $new[$i]['image'] = stripslashes( $images[$i] );
+      else
+          $new[$i]['image'] = '';
+    endif;
   }
+  if ( !empty( $new ) && $new != $old )
+      update_post_meta( $post_id, 'pr_img_text_sets', $new );
+  elseif ( empty($new) && $old )
+      delete_post_meta( $post_id, 'pr_img_text_sets', $old );
 }
 add_action( 'save_post', 'pr_img_text_meta_save' );
 ?>
