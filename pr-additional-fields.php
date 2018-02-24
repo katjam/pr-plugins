@@ -32,28 +32,31 @@ function pr_img_text_defaults() {
 }
 
 /**
- * callback function to populate metabox
+ * Callback function to populate metabox
  */
-function pr_further_info_metabox_content() {
+function pr_img_text_metabox_content() {
   global $post; // The current post
   wp_nonce_field( basename( __FILE__ ), 'pr_nonce' );
-  $saved = get_post_meta( $post->ID, 'pr', true );
+  $img_text_sets = ['image', 'heading', 'text'];
+  foreach ($img_text_sets as $field) {
+      $saved[$field] = get_post_meta( $post->ID, 'pr_img_text_'.$field, true );
+  }
   $defaults = pr_img_text_defaults();
   $details = wp_parse_args ( $saved, $defaults );
 ?>
-
-<p>
-  Add Image with header and text to appear in list below page content.
-</p>
-<fieldset>
-
-</fieldset>
-
+  <label for="heading">Heading</label>
+  <input id="heading" name="heading" type="text" value="<?php echo $details['heading'] ?>" />
+  <label for="text">Text</label>
+  <input id="text" name="text" type="textbox" value="<?php echo $details['text'] ?>" />
+  <label for="image">Image</label>
+  <input id="image" name="image" type="text" value="<?php echo $details['image'] ?>" />
 <?php
+}
+
 /**
  * Save the image and text values
  */
-function pr_img_text_meta_save( $post_id, $post ) {
+function pr_img_text_meta_save( $post_id ) {
   // Checks save status
   $is_autosave = wp_is_post_autosave( $post_id );
   $is_revision = wp_is_post_revision( $post_id );
@@ -67,12 +70,12 @@ function pr_img_text_meta_save( $post_id, $post ) {
   }
 
   // Checks for input and saves if needed
-  $img_text_sets = [];
+  $img_text_sets = ['image', 'heading', 'text'];
   foreach ( $img_text_sets as $field ) {
     if ( isset( $_POST[ $field ] ) ) {
       update_post_meta(
         $post_id,
-        $field,
+        'pr_img_text_' . $field,
         $_POST[ $field ]
       );
     }
