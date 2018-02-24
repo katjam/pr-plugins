@@ -54,14 +54,19 @@ function pr_img_text_metabox_content() {
           $(this).parents('tr').remove();
           return false;
       });
+
+      $( '.upload_img_btn' ).on('click', function() {
+        tb_show('', 'media-upload.php?postid-<?php echo $post->ID; ?>&type=image&amp;TB_iframe=true');
+        return false;
+      });
   });
   </script>
   <table id="pr-img-text-sets" width="100%">
     <thead>
         <tr>
-            <th width="30%">Heading</th>
-            <th width="30%">Text</th>
-            <th width="30%">Image</th>
+            <th width="20%">Image</th>
+            <th width="20%">Heading</th>
+            <th width="50%">Text</th>
             <th width="8%"></th>
         </tr>
     </thead>
@@ -70,9 +75,13 @@ function pr_img_text_metabox_content() {
   if ( $img_text_sets ) :
     foreach ( $img_text_sets as $field ) {
 ?><tr>
+    <td>
+      <input name="image[]" type="text" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
+      <input class="upload_img_btn" type="button" value="Upload Image" />
+      <img src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
+    </td>
     <td><input name="heading[]" type="text" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
-    <td><input name="text[]" type="text" value="<?php echo $field['text'] ? $field['text'] : $defaults['text'] ?>" /></td>
-    <td><input name="image[]" type="text" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" /></td>
+    <td><textarea name="text[]" rows="5" cols="70"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></td>
     <td><a class="button remove-row" href="#">Remove</a></td>
   </tr>
 <?php
@@ -81,8 +90,12 @@ function pr_img_text_metabox_content() {
   // A blank row.
 ?>  <tr>
       <td><input name="heading[]" type="text" value="<?php echo $defaults['heading'] ?>" /></td>
-      <td><input name="text[]" type="textbox" value="<?php echo $defaults['text'] ?>" /></td>
-      <td><input name="image[]" type="text" value="<?php echo $defaults['image'] ?>" /></td>
+      <td><input name="text[]" type="textarea" value="<?php echo $defaults['text'] ?>" /></td>
+      <td>
+        <input name="image[]" type="text" value="<?php echo $defaults['image'] ?>" />
+        <input class="upload_img_btn" type="button" value="Upload Image" />
+        <img src="<?php echo $defauts['image']; ?>" style="width:150px;" />
+      </td>
       <td><a class="button remove-row" href="#">Remove</a></td>
     </tr>
 <?php endif; ?>
@@ -90,8 +103,12 @@ function pr_img_text_metabox_content() {
 <!-- A blank row for jquery add another -->
   <tr class="empty-row screen-reader-text">
     <td><input name="heading[]" type="text" value="<?php echo $defaults['heading'] ?>" /></td>
-    <td><input name="text[]" type="textbox" value="<?php echo $defaults['text'] ?>" /></td>
-    <td><input name="image[]" type="text" value="<?php echo $defaults['image'] ?>" /></td>
+    <td><input name="text[]" type="textarea" value="<?php echo $defaults['text'] ?>" /></td>
+    <td>
+      <input name="image[]" type="text" value="<?php echo $defaults['image'] ?>" />
+      <input class="upload_img_btn" type="button" value="Upload Image" />
+      <img src="<?php echo $defauts['image']; ?>" style="width:150px;" />
+    </td>
     <td><a class="button remove-row" href="#">Remove</a></td>
   </tr>
 </tbody>
@@ -150,3 +167,5 @@ function pr_img_text_meta_save( $post_id ) {
 }
 add_action( 'save_post', 'pr_img_text_meta_save' );
 ?>
+
+
