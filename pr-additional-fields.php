@@ -72,9 +72,9 @@ function pr_img_text_metabox_content() {
     foreach ( $img_text_sets as $field ) {
 ?><tr>
     <td>
-      <input id="image_url_<?php echo $count; ?>" name="image[]" type="text" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
-      <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
+      <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
       <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
+      <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
     </td>
     <td><input name="heading[]" type="text" size="48" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
     <td><textarea name="text[]" rows="5" cols="70"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></td>
@@ -104,9 +104,9 @@ function pr_img_text_metabox_content() {
   // A blank row.
 ?><tr>
     <td>
-      <input id="image_url_<?php echo $count; ?>name="image[]" type="text" value="<?php echo $defaults['image'] ?>" />
-      <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
+      <input id="image_url_<?php echo $count; ?>name="image[]" type="hidden" value="<?php echo $defaults['image'] ?>" />
       <img id="picsrc_<?php echo $count; ?>" src="<?php echo $defauts['image']; ?>" style="width:150px;" />
+      <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
     </td>
     <td><input name="heading[]" type="text" size="48" value="<?php echo $defaults['heading'] ?>" /></td>
     <td><textarea name="text[]" rows="5" cols="70"><?php echo $defaults['text'] ?></textarea></td>
@@ -117,9 +117,9 @@ function pr_img_text_metabox_content() {
 <!-- A blank row for jquery add another -->
   <tr class="empty-row screen-reader-text">
     <td>
-      <input id="image_url_<?php echo $count; ?>" name="image[]" type="text" value="<?php echo $defaults['image'] ?>" />
-      <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
+      <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $defaults['image'] ?>" />
       <img id="picsrc_<?php echo $count; ?>" src="<?php echo $defauts['image']; ?>" style="width:150px;" />
+      <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
     </td>
     <td><input name="heading[]" type="text" size="48" value="<?php echo $defaults['heading'] ?>" /></td>
     <td><textarea name="text[]" rows="5" cols="70"><?php echo $defaults['text'] ?></textarea></td>
