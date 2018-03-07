@@ -33,10 +33,10 @@ class pr_address_widget extends WP_Widget
         }
 
         $text = '
-        <div class="address">
-           Philips Rogers Ltd<br>
-           Trudgeon Halling, The Platt<br>
-           Wadebridge PL27 7AE<br>
+        <div class="col-md-10 address">
+           Philips Rogers is a limited company registered in England and Wales. Registered number: 10750484.<br>
+           Registered office: Trudgeon Halling, The Platt,
+           Wadebridge, PL27 7AE (service address only)
         </div>
         ';
         if( !empty( $instance['text'] ) ) {
