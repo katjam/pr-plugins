@@ -68,19 +68,8 @@ function pr_img_text_metabox_content() {
     <tbody>
 <?php
   $count = 1;
-  if ( $img_text_sets ) :
-    foreach ( $img_text_sets as $field ) {
-?><tr>
-    <td>
-      <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
-      <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
-      <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
-    </td>
-    <td><input name="heading[]" type="text" size="48" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
-    <td><textarea name="text[]" rows="5" cols="70"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></td>
-    <td><a class="button remove-row" href="#">Remove</a></td>
-  </tr>
-<script>
+?>
+  <script>
         jQuery(document).ready( function( $ ) {
             jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
                 //use here, because you may have multiple buttons, so `send_to_editor` needs fresh
@@ -98,6 +87,19 @@ function pr_img_text_metabox_content() {
         });
         </script>
 
+<?php
+  if ( $img_text_sets ) :
+    foreach ( $img_text_sets as $field ) {
+?><tr>
+    <td>
+      <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
+      <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
+      <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
+    </td>
+    <td><input name="heading[]" type="text" size="48" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
+    <td><textarea name="text[]" rows="5" cols="70"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></td>
+    <td><a class="button remove-row" href="#">Remove</a></td>
+  </tr>
 <?php $count ++;
     }
   else :
