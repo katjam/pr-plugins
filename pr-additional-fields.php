@@ -66,13 +66,20 @@ function pr_img_text_metabox_content() {
       <div>
         <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
         <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
-        <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
+        <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload New Image" />
       </div>
-      <div><input name="heading[]" type="text" size="60" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></div>
-      <div><textarea name="text[]" rows="5" cols="60"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></div>
+      <div>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label" for="heading[]">Heading</label>
+        </p>
+        <input name="heading[]" type="text" size="80" value="<?php echo $defaults['heading'] ?>" />
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Paragraph Text</label>
+        </p>
+        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea></div>
+      </div>
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
-  </div>
   <script>
     jQuery(document).ready( function( $ ) {
       jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
@@ -99,13 +106,20 @@ function pr_img_text_metabox_content() {
       <div>
         <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $defaults['image'] ?>" />
         <img id="picsrc_<?php echo $count; ?>" src="<?php echo $defauts['image']; ?>" style="width:150px;" />
-        <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
+        <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload New Image" />
       </div>
-      <div><input name="heading[]" type="text" size="60" value="<?php echo $defaults['heading'] ?>" /></div>
-      <div><textarea name="text[]" rows="5" cols="60"><?php echo $defaults['text'] ?></textarea></div>
+      <div>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label" for="heading[]">Heading</label>
+        </p>
+        <input name="heading[]" type="text" size="80" value="<?php echo $defaults['heading'] ?>" />
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Paragraph Text</label>
+        </p>
+        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea></div>
+      </div>
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
-  </div>
   <script>
     jQuery(document).ready( function( $ ) {
       jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
@@ -132,13 +146,20 @@ function pr_img_text_metabox_content() {
       <div>
         <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $defaults['image'] ?>" />
         <img id="picsrc_<?php echo $count; ?>" src="<?php echo $defauts['image']; ?>" style="width:150px;" />
-        <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
+        <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload New Image" />
       </div>
-      <div><input name="heading[]" type="text" size="60" value="<?php echo $defaults['heading'] ?>" /></div>
-      <div><textarea name="text[]" rows="5" cols="60"><?php echo $defaults['text'] ?></textarea></div>
+      <div>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label" for="heading[]">Heading</label>
+        </p>
+        <input name="heading[]" type="text" size="80" value="<?php echo $defaults['heading'] ?>" />
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Paragraph Text</label>
+        </p>
+        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea></div>
+      </div>
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
-  </div>
   <script>
     jQuery(document).ready( function( $ ) {
       jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
