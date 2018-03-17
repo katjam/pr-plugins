@@ -56,7 +56,7 @@ function pr_img_text_metabox_content() {
         });
     });
     </script>
-<div class="container" id="pr-img-text-sets" width="100%">
+<div class="container" id="pr-img-text-sets">
 <?php
     $count = 1;
     if ( $img_text_sets ) :
@@ -70,7 +70,7 @@ function pr_img_text_metabox_content() {
       </div>
       <div>
         <p class="post-attributes-label-wrapper">
-          <label class="post-attributes-label" for="heading[]">Heading</label>
+          <label class="post-attributes-label">Heading</label>
         </p>
         <input name="heading[]" type="text" size="80" value="<?php echo $defaults['heading'] ?>" />
         <p class="post-attributes-label-wrapper">
@@ -110,7 +110,7 @@ function pr_img_text_metabox_content() {
       </div>
       <div>
         <p class="post-attributes-label-wrapper">
-          <label class="post-attributes-label" for="heading[]">Heading</label>
+          <label class="post-attributes-label">Heading</label>
         </p>
         <input name="heading[]" type="text" size="80" value="<?php echo $defaults['heading'] ?>" />
         <p class="post-attributes-label-wrapper">
@@ -150,7 +150,7 @@ function pr_img_text_metabox_content() {
       </div>
       <div>
         <p class="post-attributes-label-wrapper">
-          <label class="post-attributes-label" for="heading[]">Heading</label>
+          <label class="post-attributes-label">Heading</label>
         </p>
         <input name="heading[]" type="text" size="80" value="<?php echo $defaults['heading'] ?>" />
         <p class="post-attributes-label-wrapper">
