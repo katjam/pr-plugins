@@ -186,11 +186,14 @@ function pr_img_text_meta_save( $post_id ) {
     $texts = $_POST['text'];
     $images = $_POST['image'];
 
-    $count = count ( $headings );
-
+    $count = max ( count ( $headings ), count ( $texts ), count ( $images ) );
+    // For all fields with any value - make sure not blank then save.
     for ( $i = 0; $i < $count; $i++ ) {
-        if ( $headings[$i] != '' ) :
+      if ( ! ( $headings[$i] . $texts[$i] . $images[$i] === '' ) ) :
+        if ( $headings[$i] != '' )
             $new[$i]['heading'] = stripslashes( strip_tags( $headings[$i] ) );
+        else
+            $new[$i]['heading'] = '';
 
         if ( $texts[$i] != '' )
             $new[$i]['text'] = $texts[$i];
@@ -201,7 +204,7 @@ function pr_img_text_meta_save( $post_id ) {
             $new[$i]['image'] = stripslashes( $images[$i] );
         else
             $new[$i]['image'] = '';
-endif;
+      endif;
     }
     if ( !empty( $new ) && $new != $old )
         update_post_meta( $post_id, 'pr_img_text_sets', $new );
