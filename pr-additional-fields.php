@@ -68,7 +68,49 @@ function pr_img_text_metabox_content() {
     <tbody>
 <?php
   $count = 1;
-?>
+  if ( $img_text_sets ) :
+    foreach ( $img_text_sets as $field ) {
+?><tr>
+    <td>
+      <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
+      <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
+      <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
+    </td>
+    <td><input name="heading[]" type="text" size="48" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
+    <td><textarea name="text[]" rows="5" cols="70"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></td>
+    <td><a class="button remove-row" href="#">Remove</a></td>
+  </tr>
+  <script>
+        jQuery(document).ready( function( $ ) {
+            jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
+                //use here, because you may have multiple buttons, so `send_to_editor` needs fresh
+                window.send_to_editor = function(html) {
+                    imgurl = jQuery(html).attr('src')
+                        jQuery('#image_url_<?php echo $count;?>').val(imgurl);
+                    jQuery('#picsrc_<?php echo $count;?>').attr("src",imgurl);
+                    tb_remove();
+                }
+
+                formfield = jQuery('#img_url_<?php echo $count;?>').attr('name');
+                tb_show( '', 'media-upload.php?type=image&amp;TB_iframe=true' );
+                return false;
+            });
+        });
+        </script>
+<?php $count ++;
+    }
+  else :
+  // A blank row.
+?><tr>
+    <td>
+      <input id="image_url_<?php echo $count; ?>name="image[]" type="hidden" value="<?php echo $defaults['image'] ?>" />
+      <img id="picsrc_<?php echo $count; ?>" src="<?php echo $defauts['image']; ?>" style="width:150px;" />
+      <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
+    </td>
+    <td><input name="heading[]" type="text" size="48" value="<?php echo $defaults['heading'] ?>" /></td>
+    <td><textarea name="text[]" rows="5" cols="70"><?php echo $defaults['text'] ?></textarea></td>
+    <td><a class="button remove-row" href="#">Remove</a></td>
+  </tr>
   <script>
         jQuery(document).ready( function( $ ) {
             jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
@@ -87,33 +129,7 @@ function pr_img_text_metabox_content() {
         });
         </script>
 
-<?php
-  if ( $img_text_sets ) :
-    foreach ( $img_text_sets as $field ) {
-?><tr>
-    <td>
-      <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
-      <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ? $field['image'] : $defauts['image']; ?>" style="width:150px;" />
-      <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload Image" />
-    </td>
-    <td><input name="heading[]" type="text" size="48" value="<?php echo $field['heading'] ? $field['heading'] : $defaults['heading'] ?>" /></td>
-    <td><textarea name="text[]" rows="5" cols="70"><?php echo $field['text'] ? $field['text'] : $defaults['text'] ?></textarea></td>
-    <td><a class="button remove-row" href="#">Remove</a></td>
-  </tr>
-<?php $count ++;
-    }
-  else :
-  // A blank row.
-?><tr>
-    <td>
-      <input id="image_url_<?php echo $count; ?>name="image[]" type="hidden" value="<?php echo $defaults['image'] ?>" />
-      <img id="picsrc_<?php echo $count; ?>" src="<?php echo $defauts['image']; ?>" style="width:150px;" />
-      <input id="upload_img_btn_<?php echo $count; ?>" type="button" value="Upload Image" />
-    </td>
-    <td><input name="heading[]" type="text" size="48" value="<?php echo $defaults['heading'] ?>" /></td>
-    <td><textarea name="text[]" rows="5" cols="70"><?php echo $defaults['text'] ?></textarea></td>
-    <td><a class="button remove-row" href="#">Remove</a></td>
-  </tr>
+
 <?php endif; ?>
 
 <!-- A blank row for jquery add another -->
@@ -127,6 +143,25 @@ function pr_img_text_metabox_content() {
     <td><textarea name="text[]" rows="5" cols="70"><?php echo $defaults['text'] ?></textarea></td>
     <td><a class="button remove-row" href="#">Remove</a></td>
   </tr>
+  <script>
+        jQuery(document).ready( function( $ ) {
+            jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
+                //use here, because you may have multiple buttons, so `send_to_editor` needs fresh
+                window.send_to_editor = function(html) {
+                    imgurl = jQuery(html).attr('src')
+                        jQuery('#image_url_<?php echo $count;?>').val(imgurl);
+                    jQuery('#picsrc_<?php echo $count;?>').attr("src",imgurl);
+                    tb_remove();
+                }
+
+                formfield = jQuery('#img_url_<?php echo $count;?>').attr('name');
+                tb_show( '', 'media-upload.php?type=image&amp;TB_iframe=true' );
+                return false;
+            });
+        });
+        </script>
+
+
 </tbody>
 </table>
 
