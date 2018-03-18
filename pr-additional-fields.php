@@ -21,6 +21,14 @@ function pr_metabox_img_text() {
 add_action( 'add_meta_boxes', 'pr_metabox_img_text' );
 
 /**
+ * Allow file uploads.
+ */
+function update_edit_form() {
+  echo ' enctype="multipart/form-data"';
+}
+add_action( 'post_edit_form_tag', 'update_edit_form' );
+
+/**
  * Metabox default values.
  */
 function pr_img_text_defaults() {
@@ -28,6 +36,8 @@ function pr_img_text_defaults() {
     'image' => '',
     'heading' => '',
     'text' => '',
+    'pdf_src' => '',
+    'pdf_text' => '',
   );
 }
 
@@ -77,7 +87,17 @@ function pr_img_text_metabox_content() {
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
         <textarea name="text[]" rows="5" cols="80"><?php echo $field['text'] ?: $defaults['text'] ?></textarea></div>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Pdf</label>
+        </p>
+        <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
+        <?php if ($field['pdf_src'] && is_array($field['pdf_src'])) { echo 'Attached pdf: ' . $field['pdf_src']['url']; } ?>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Pdf Title</label>
+        </p>
+        <input name="pdf_text[]" type="text" size="80" value="<?php echo $field['pdf_text'] ?: $defaults['pdf_text'] ?>"/>
       </div>
+
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
   <script>
@@ -206,26 +226,32 @@ function pr_img_text_meta_save( $post_id ) {
     $headings = $_POST['heading'];
     $texts = $_POST['text'];
     $images = $_POST['image'];
+    $pdfs = $_FILES['pdf_src'];
 
     $count = max ( count ( $headings ), count ( $texts ), count ( $images ) );
     // For all fields with any value - make sure not blank then save.
     for ( $i = 0; $i < $count; $i++ ) {
       if ( ! ( $headings[$i] . $texts[$i] . $images[$i] === '' ) ) :
         if ( $headings[$i] != '' )
-            $new[$i]['heading'] = stripslashes( strip_tags( $headings[$i] ) );
+          $new[$i]['heading'] = stripslashes( strip_tags( $headings[$i] ) );
         else
-            $new[$i]['heading'] = '';
+          $new[$i]['heading'] = '';
 
         if ( $texts[$i] != '' )
-            $new[$i]['text'] = $texts[$i];
+          $new[$i]['text'] = $texts[$i];
         else
-            $new[$i]['text'] = '';
+          $new[$i]['text'] = '';
 
         if ( $images[$i] != '' )
-            $new[$i]['image'] = stripslashes( $images[$i] );
+          $new[$i]['image'] = stripslashes( $images[$i] );
         else
-            $new[$i]['image'] = '';
+          $new[$i]['image'] = '';
       endif;
+      if ( $pdfs['tmp_name'][$i] )
+        $new[$i]['pdf_src'] = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
+      else
+        $new[$i]['pdf_src'] = '';
+      error_log(print_r($new[$i]['pdf_src'], true));
     }
     if ( !empty( $new ) && $new != $old )
         update_post_meta( $post_id, 'pr_img_text_sets', $new );
