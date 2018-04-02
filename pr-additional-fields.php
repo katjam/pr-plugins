@@ -60,7 +60,10 @@ function pr_img_text_metabox_content() {
         });
 
         $( '.remove-row' ).on('click', function() {
-            $(this).parents('div .multi.row').remove();
+            var choice = confirm('Are you sre you want to delete all the fields in this set? Image, Heading, Paragraph Text and Pdf.');
+            if (choice) {
+                $(this).parents('div .multi.row').remove();
+            }
             return false;
         });
     });
@@ -73,7 +76,7 @@ function pr_img_text_metabox_content() {
 ?><div class="multi row postbox">
     <div class="inside">
       <div>
-        <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
+        <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? ['image'] : $defaults['image'] ?>" />
         <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ?: $defauts['image']; ?>" style="width:150px;" />
         <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload New Image" />
       </div>
@@ -91,11 +94,11 @@ function pr_img_text_metabox_content() {
         <label class="post-attributes-label">Pdf</label>
       </p>
       <?php if ($field['pdf_src']) {
-        echo 'Attached pdf: ' . $field['pdf_src'];
-      } else { ?>
+        echo 'Attached pdf: ' .  $field['pdf_src']; ?>
+      <?php } else { ?>
       <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
       <?php } ?>
-      <div><a class="button remove-row" href="#">Remove</a></div>
+      <div><p><a class="button remove-row" href="#">Remove</a></p></div>
     </div>
   </div>
   <script>
@@ -140,7 +143,7 @@ function pr_img_text_metabox_content() {
         <label class="post-attributes-label">Pdf</label>
       </p>
       <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
-      <div><a class="button remove-row" href="#">Remove</a></div>
+      <div><p><a class="button remove-row" href="#">Remove</a></p></div>
     </div>
   </div>
   <script>
@@ -203,7 +206,7 @@ function pr_img_text_metabox_content() {
   });
   </script>
 
-  <div><a id="add-row" class="button" href="#">Add another</a></div>
+  <div><p><a id="add-row" class="button" href="#">Add another</a></p></div>
 </div>
 
 <?php
@@ -250,7 +253,7 @@ function pr_img_text_meta_save( $post_id ) {
         if ( $images[$i] != '' )
           $new[$i]['image'] = stripslashes( $images[$i] );
         else
-          $new[$i]['image'] = '';
+            $new[$i]['image'] = '';
       endif;
       if ( $pdfs['size'][$i] !== 0 ) {
           $file = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
