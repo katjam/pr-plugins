@@ -37,7 +37,6 @@ function pr_img_text_defaults() {
     'heading' => '',
     'text' => '',
     'pdf_src' => '',
-    'pdf_text' => '',
   );
 }
 
@@ -86,20 +85,19 @@ function pr_img_text_metabox_content() {
         <p class="post-attributes-label-wrapper">
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
-        <textarea name="text[]" rows="5" cols="80"><?php echo $field['text'] ?: $defaults['text'] ?></textarea></div>
-        <p class="post-attributes-label-wrapper">
-          <label class="post-attributes-label">Pdf</label>
-        </p>
-        <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
-        <?php if ($field['pdf_src'] && is_array($field['pdf_src'])) { echo 'Attached pdf: ' . $field['pdf_src']['url']; } ?>
-        <p class="post-attributes-label-wrapper">
-          <label class="post-attributes-label">Pdf Title</label>
-        </p>
-        <input name="pdf_text[]" type="text" size="80" value="<?php echo $field['pdf_text'] ?: $defaults['pdf_text'] ?>"/>
+        <textarea name="text[]" rows="5" cols="80"><?php echo $field['text'] ?: $defaults['text'] ?></textarea>
       </div>
-
+      <p class="post-attributes-label-wrapper">
+        <label class="post-attributes-label">Pdf</label>
+      </p>
+      <?php if ($field['pdf_src']) {
+        echo 'Attached pdf: ' . $field['pdf_src'];
+      } else { ?>
+      <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
+      <?php } ?>
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
+  </div>
   <script>
     jQuery(document).ready( function( $ ) {
       jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
@@ -136,10 +134,15 @@ function pr_img_text_metabox_content() {
         <p class="post-attributes-label-wrapper">
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
-        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea></div>
+        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea>
       </div>
+      <p class="post-attributes-label-wrapper">
+        <label class="post-attributes-label">Pdf</label>
+      </p>
+      <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
+  </div>
   <script>
     jQuery(document).ready( function( $ ) {
       jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
@@ -176,10 +179,12 @@ function pr_img_text_metabox_content() {
         <p class="post-attributes-label-wrapper">
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
-        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea></div>
+        <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea>
       </div>
+      <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
+  </div>
   <script>
     jQuery(document).ready( function( $ ) {
       jQuery('#upload_img_btn_<?php echo $count;?>').click(function() {
@@ -247,11 +252,10 @@ function pr_img_text_meta_save( $post_id ) {
         else
           $new[$i]['image'] = '';
       endif;
-      if ( $pdfs['tmp_name'][$i] )
-        $new[$i]['pdf_src'] = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
-      else
-        $new[$i]['pdf_src'] = '';
-      error_log(print_r($new[$i]['pdf_src'], true));
+      if ( $pdfs['size'][$i] !== 0 ) {
+          $file = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
+          $new[$i]['pdf_src'] = $file['url'];
+      }
     }
     if ( !empty( $new ) && $new != $old )
         update_post_meta( $post_id, 'pr_img_text_sets', $new );
