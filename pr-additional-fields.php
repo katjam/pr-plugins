@@ -97,7 +97,7 @@ function pr_img_text_metabox_content() {
         echo 'Attached pdf: ' .  $field['pdf_src']; ?>
         <input id="pdf_src_<?php echo $count; ?>" name="pdf_src[]" type="hidden" value="<?php echo $field['pdf_src'] ?>"
       <?php } else { ?>
-        <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
+        <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count ?>" size="25" type="file" value="" />
       <?php } ?>
       <div><p><a class="button remove-row" href="#">Remove</a></p></div>
     </div>
@@ -143,7 +143,7 @@ function pr_img_text_metabox_content() {
       <p class="post-attributes-label-wrapper">
         <label class="post-attributes-label">Pdf</label>
       </p>
-      <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
+      <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value="" />
       <div><p><a class="button remove-row" href="#">Remove</a></p></div>
     </div>
   </div>
@@ -185,7 +185,7 @@ function pr_img_text_metabox_content() {
         </p>
         <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea>
       </div>
-      <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
+      <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value="" />
       <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
   </div>
@@ -234,11 +234,13 @@ function pr_img_text_meta_save( $post_id ) {
     $headings = $_POST['heading'];
     $texts = $_POST['text'];
     $images = $_POST['image'];
-    $pdfs = $_FILES['pdf_src'];
 
     $count = max ( count ( $headings ), count ( $texts ), count ( $images ) );
     // For all fields with any value - make sure not blank then save.
     for ( $i = 0; $i < $count; $i++ ) {
+      $pid = $i-1;
+      $pdf = $_FILES['pdf_file_'.$pid] ? $_FILES['pdf_file_'.$pid] : null;
+      error_log(print_r($_FILES, true));
       if ( ! ( $headings[$i] . $texts[$i] . $images[$i] === '' ) ) :
         if ( $headings[$i] != '' )
           $new[$i]['heading'] = stripslashes( strip_tags( $headings[$i] ) );
@@ -256,8 +258,8 @@ function pr_img_text_meta_save( $post_id ) {
             $new[$i]['image'] = '';
       endif;
       // If there is a new pdf uploaded... use that
-      if ( $pdfs['size'][$i] !== 0 && $pdfs['tmp_name'][$i]) {
-            $file = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
+      if ( $pdf && $pdf['size'] !== 0 && $pdf['tmp_name']) {
+            $file = wp_upload_bits($pdf['name'], null, file_get_contents($pdf['tmp_name']));
             $new[$i]['pdf_src'] = $file['url'];
       } else {
             if ($_POST['pdf_src'][$i] != '') {
