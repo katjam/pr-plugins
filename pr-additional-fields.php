@@ -95,8 +95,9 @@ function pr_img_text_metabox_content() {
       </p>
       <?php if ($field['pdf_src']) {
         echo 'Attached pdf: ' .  $field['pdf_src']; ?>
+        <input id="pdf_src_<?php echo $count; ?>" name="pdf_src[]" type="hidden" value="<?php echo $field['pdf_src'] ?>"
       <?php } else { ?>
-      <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
+        <input id="pdf_src_<?php echo $count; ?>" title="select file" multiple="multiple" name="pdf_src[]" size="25" type="file" value="" />
       <?php } ?>
       <div><p><a class="button remove-row" href="#">Remove</a></p></div>
     </div>
@@ -230,7 +231,6 @@ function pr_img_text_meta_save( $post_id ) {
 
     $old = get_post_meta( $post_id, 'pr_img_text_sets', true );
     $new = [];
-
     $headings = $_POST['heading'];
     $texts = $_POST['text'];
     $images = $_POST['image'];
@@ -255,9 +255,14 @@ function pr_img_text_meta_save( $post_id ) {
         else
             $new[$i]['image'] = '';
       endif;
-      if ( $pdfs['size'][$i] !== 0 ) {
-          $file = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
-          $new[$i]['pdf_src'] = $file['url'];
+      // If there is a new pdf uploaded... use that
+      if ( $pdfs['size'][$i] !== 0 && $pdfs['tmp_name'][$i]) {
+            $file = wp_upload_bits($pdfs['name'][$i], null, file_get_contents($pdfs['tmp_name'][$i]));
+            $new[$i]['pdf_src'] = $file['url'];
+      } else {
+            if ($_POST['pdf_src'][$i] != '') {
+                $new[$i]['pdf_src'] = stripslashes($_POST['pdf_src'][$i]);
+            }
       }
     }
     if ( !empty( $new ) && $new != $old )
