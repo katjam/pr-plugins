@@ -89,10 +89,9 @@ function pr_img_text_metabox_content() {
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
         <textarea name="text[]" rows="5" cols="80"><?php echo $field['text'] ?: $defaults['text'] ?></textarea>
-      </div>
-      <p class="post-attributes-label-wrapper">
-        <label class="post-attributes-label">Pdf</label>
-      </p>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Pdf</label>
+        </p>
       <?php if ($field['pdf_src']) {
         echo 'Attached pdf: ' .  $field['pdf_src']; ?>
         <input id="pdf_src_<?php echo $count; ?>" name="pdf_src[]" type="hidden" value="<?php echo $field['pdf_src'] ?>"
