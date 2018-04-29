@@ -76,7 +76,7 @@ function pr_img_text_metabox_content() {
 ?><div class="multi row postbox">
     <div class="inside">
       <div>
-        <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? ['image'] : $defaults['image'] ?>" />
+        <input id="image_url_<?php echo $count; ?>" name="image[]" type="hidden" value="<?php echo $field['image'] ? $field['image'] : $defaults['image'] ?>" />
         <img id="picsrc_<?php echo $count; ?>" src="<?php echo $field['image'] ?: $defauts['image']; ?>" style="width:150px;" />
         <input id="upload_img_btn_<?php echo $count ?>" type="button" value="Upload New Image" />
       </div>
