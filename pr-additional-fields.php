@@ -92,13 +92,14 @@ function pr_img_text_metabox_content() {
         <p class="post-attributes-label-wrapper">
           <label class="post-attributes-label">Pdf</label>
         </p>
-      <?php if ($field['pdf_src']) {
+      <?php if ($field['pdf_src'] && $field['pdf_src'] !== "No pdf") {
         echo 'Attached pdf: ' .  $field['pdf_src']; ?>
-        <input id="pdf_src_<?php echo $count; ?>" name="pdf_src[]" type="hidden" value="<?php echo $field['pdf_src'] ?>"
+        <input id="pdf_src_<?php echo $count; ?>" name="pdf_src[]" type="hidden" value="<?php echo $field['pdf_src'] ?>" />
       <?php } else { ?>
-        <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count ?>" size="25" type="file" value="" />
+        <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value="" />
       <?php } ?>
-      <div><p><a class="button remove-row" href="#">Remove</a></p></div>
+        <div><p><a class="button remove-row" href="#">Remove</a></p></div>
+      </div>
     </div>
   </div>
   <script>
@@ -138,12 +139,12 @@ function pr_img_text_metabox_content() {
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
         <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Pdf</label>
+        </p>
+        <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value ="" />
+        <div><p><a class="button remove-row" href="#">Remove</a></p></div>
       </div>
-      <p class="post-attributes-label-wrapper">
-        <label class="post-attributes-label">Pdf</label>
-      </p>
-      <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value="" />
-      <div><p><a class="button remove-row" href="#">Remove</a></p></div>
     </div>
   </div>
   <script>
@@ -183,9 +184,12 @@ function pr_img_text_metabox_content() {
           <label class="post-attributes-label">Paragraph Text</label>
         </p>
         <textarea name="text[]" rows="5" cols="80"><?php echo $defaults['text'] ?></textarea>
+        <p class="post-attributes-label-wrapper">
+          <label class="post-attributes-label">Pdf</label>
+        </p>
+        <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value="" />
+        <div><a class="button remove-row" href="#">Remove</a></div>
       </div>
-      <input id="pdf_file_<?php echo $count; ?>" title="select file" name="pdf_file_<?php echo $count; ?>" size="25" type="file" value="" />
-      <div><a class="button remove-row" href="#">Remove</a></div>
     </div>
   </div>
   <script>
@@ -230,16 +234,15 @@ function pr_img_text_meta_save( $post_id ) {
 
     $old = get_post_meta( $post_id, 'pr_img_text_sets', true );
     $new = [];
-    $headings = $_POST['heading'];
-    $texts = $_POST['text'];
-    $images = $_POST['image'];
+    $headings = $_POST['heading'] ? $_POST['heading'] : [];
+    $texts = $_POST['text'] ? $_POST['text'] : [];
+    $images = $_POST['image'] ? $_POST['image'] : [];
 
     $count = max ( count ( $headings ), count ( $texts ), count ( $images ) );
     // For all fields with any value - make sure not blank then save.
-    for ( $i = 0; $i < $count; $i++ ) {
-      $pid = $i-1;
+    for ( $i = 0; $i <= $count; $i++ ) {
+      $pid = $i + 1;
       $pdf = $_FILES['pdf_file_'.$pid] ? $_FILES['pdf_file_'.$pid] : null;
-      error_log(print_r($_FILES, true));
       if ( ! ( $headings[$i] . $texts[$i] . $images[$i] === '' ) ) :
         if ( $headings[$i] != '' )
           $new[$i]['heading'] = stripslashes( strip_tags( $headings[$i] ) );
@@ -258,13 +261,18 @@ function pr_img_text_meta_save( $post_id ) {
       endif;
       // If there is a new pdf uploaded... use that
       if ( $pdf && $pdf['size'] !== 0 && $pdf['tmp_name']) {
-            $file = wp_upload_bits($pdf['name'], null, file_get_contents($pdf['tmp_name']));
-            $new[$i]['pdf_src'] = $file['url'];
-      } else {
-            if ($_POST['pdf_src'][$i] != '') {
-                $new[$i]['pdf_src'] = stripslashes($_POST['pdf_src'][$i]);
-            }
-      }
+          $file = wp_upload_bits($pdf['name'], null, file_get_contents($pdf['tmp_name']));
+          $new[$i]['pdf_src'] = $file['url'];
+       } else {
+          if ($_POST['pdf_src'][$i] != '') {
+            $new[$i]['pdf_src'] = stripslashes($_POST['pdf_src'][$i]);
+          } else {
+            // Placeholder for empty pdf field
+            if ( ! ( $headings[$i] . $texts[$i] . $images[$i] === '' ) ) :
+              $new[$i]['pdf_src'] = 'No pdf';
+            endif;
+          }
+       }
     }
     if ( !empty( $new ) && $new != $old )
         update_post_meta( $post_id, 'pr_img_text_sets', $new );
