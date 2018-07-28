@@ -6,6 +6,30 @@ Author: katjam
 */
 
 /**
+* Add metabox in sidebar pane
+*/
+function pr_metabox_display_property_teasers() {
+  add_meta_box(
+    'pr_property_teasers',
+    'Property listings',
+    'pr_property_teasers',
+    'page',
+    'side',
+    'default'
+  );
+}
+add_action( 'add_meta_boxes', 'pr_metabox_display_property_teasers' );
+
+function pr_property_teasers() {
+  global $post; // The current post
+  wp_nonce_field( basename( __FILE__ ), 'pr_nonce' );
+  $pr_display_property_listings = get_post_meta( $post->ID, 'pr_property_teasers', true);
+  $isChecked = $pr_display_property_listings === 'on' ? true : false;
+?>
+  <input type="checkbox" name="pr_property_teasers" <?php if ($isChecked) echo "checked"; ?> /><strong>Display property listings</strong> on this page.
+<?php }
+
+/**
 * Add metabox below editing pane
 */
 function pr_metabox_img_text() {
@@ -231,6 +255,8 @@ function pr_img_text_meta_save( $post_id ) {
     if ( $is_autosave || $is_revision || !$is_valid_nonce ) {
         return;
     }
+
+    update_post_meta( $post_id, 'pr_property_teasers', $_POST['pr_property_teasers'] );
 
     $old = get_post_meta( $post_id, 'pr_img_text_sets', true );
     $new = [];

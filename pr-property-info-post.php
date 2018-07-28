@@ -14,13 +14,12 @@ function create_property_listing_post_type() {
       'labels' => ['name' => __('Properties'), 'singular_name' => __('Property')],
       'public' => true,
       'has_archive' => true,
+      'register_meta_box_cb' => 'pr_property_listing_meta_boxes',
       'rewrite' => ['slug' => 'property'],
       'supports' => array('title', 'editor', 'excerpt', 'revisions', 'thumbnail'),
     ]
   );
 }
-
-add_action( 'add_meta_boxes', 'pr_property_listing_meta_boxes' );
 
 function pr_property_listing_meta_boxes() {
   add_meta_box(
