@@ -36,7 +36,7 @@ function pr_property_listing_pdf() {
     $html .= '</p>';
     $html .= '<input type="file" id="pr_property_listing_pdf" name="pr_property_listing_pdf" value="" size="25">';
     $filearray = get_post_meta( get_the_ID(), 'pr_property_listing_pdf', true );
-    $this_file = $filearray['url'];
+    $this_file = $filearray ? $filearray['url'] : '';
     if($this_file != ""){
       $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
     }
