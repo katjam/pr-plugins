@@ -15,7 +15,7 @@ function create_property_listing_post_type() {
       'public' => true,
       'has_archive' => true,
       'register_meta_box_cb' => 'pr_property_listing_meta_boxes',
-      'rewrite' => ['slug' => 'property'],
+      'rewrite' => ['slug' => 'commercial-property'],
       'supports' => array('title', 'editor', 'excerpt', 'revisions', 'thumbnail'),
     ]
   );
