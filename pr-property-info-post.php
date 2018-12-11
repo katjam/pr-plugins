@@ -53,7 +53,8 @@ function pr_property_listing_pdf() {
 function pr_property_listing_status() {
     wp_nonce_field(plugin_basename(__FILE__), 'pr_property_listing_status_nonce');
     $statuses = ['None', 'Sold STC', 'Under Offer', 'Let STC', 'Let Agreed', 'Sold'];
-    $status = get_post_meta( get_the_ID(), 'pr_property_listing_status', true );
+    $saved_status = get_post_meta( get_the_ID(), 'pr_property_listing_status', true );
+    $status = $saved_status ? $saved_status : 'None';
     $html = '<p class="description">';
     $html .= 'Select a status or "None" for no banner';
     $html .= '</p><ul>';
