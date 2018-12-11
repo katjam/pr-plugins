@@ -27,6 +27,13 @@ function pr_property_listing_meta_boxes() {
     'Property Listing PDF',
     'pr_property_listing_pdf'
   );
+  add_meta_box(
+    'pr_property_status',
+    'Property Status',
+    'pr_property_listing_status',
+    null,
+    'side'
+  );
 }
 
 function pr_property_listing_pdf() {
@@ -43,9 +50,30 @@ function pr_property_listing_pdf() {
     echo $html;
 }
 
+function pr_property_listing_status() {
+    wp_nonce_field(plugin_basename(__FILE__), 'pr_property_listing_status_nonce');
+    $statuses = ['None', 'Sold STC', 'Under Offer', 'Let STC', 'Let Agreed', 'Sold'];
+    $status = get_post_meta( get_the_ID(), 'pr_property_listing_status', true );
+    $html = '<p class="description">';
+    $html .= 'Select a status or "None" for no banner';
+    $html .= '</p><ul>';
+    foreach ($statuses as $i => $s) {
+      $ckd = $s === $status ? 'checked' : '';
+      $html .= '<li>';
+      $html .= '<input type="radio" id="status_'.$i.'" name="pr_property_listing_status" value="'.$s.'"'.$ckd.'>';
+      $html .= '<label for="status_'.$i.'">'.$s.'</label>';
+      $html .= '</li>';
+    }
+    $html .= '</ul>';
+    echo $html;
+}
+
+
 add_action('save_post', 'save_custom_meta_data');
 function save_custom_meta_data($id) {
+    if (!current_user_can('edit_post', $id)) {return;}
     if(!empty($_FILES['pr_property_listing_pdf']['name'])) {
+        if (!isset($_POST['pr_property_listing_pdf_nonce']) || !wp_verify_nonce($_POST['pr_property_listing_pdf_nonce'], plugin_basename(__FILE__))) {return;}
         $supported_types = array('application/pdf');
         $arr_file_type = wp_check_filetype(basename($_FILES['pr_property_listing_pdf']['name']));
         $uploaded_type = $arr_file_type['type'];
@@ -61,6 +89,10 @@ function save_custom_meta_data($id) {
         else {
             wp_die("The file type that you've uploaded is not a PDF.");
         }
+    }
+    if ( isset ($_REQUEST['pr_property_listing_status'] )) {
+        if (!isset($_POST['pr_property_listing_status_nonce']) || !wp_verify_nonce($_POST['pr_property_listing_status_nonce'], plugin_basename(__FILE__))) {return;}
+        update_post_meta($id, 'pr_property_listing_status', sanitize_text_field( $_POST['pr_property_listing_status']));
     }
 }
 
