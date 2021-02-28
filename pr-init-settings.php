@@ -33,22 +33,47 @@ function pr_init_settings()
  */
 function pr_add_pages()
 {
-    $lorem = '<p>Nullam pulvinar ante nec massa mollis tincidunt. Sed consectetur, lacus a vulputate molestie, velit ipsum semper enim, eu consectetur quam leo quis nisi. In mattis nisi eget orci convallis vel tempus eros imperdiet. Duis in lacus nec sapien porttitor iaculis eu et dui. Proin feugiat turpis ut tellus hendrerit pretium. Donec laoreet ante sed dui placerat venenatis. Aliquam pulvinar eros a velit eleifend elementum.</p>';
   /**********               Add Parent pages            ************/
   $parent_pages = array();
   // menu order => title
   $titles = array(
-    5   => 'About Us',
-    10  => 'Building Surveying',
-    20  => 'Commercial Agency',
-    40  => 'Case Studies',
-    50  => 'Areas We Cover',
-    60  => 'Contact Us',
+    10  => 'Propery Search',
+    20  => 'Building Surveying',
+    30  => 'About Us',
+    40  => 'Careers',
+    50  => 'Completed Projects',
   );
+
+  $content = array(
+    10 => "<p>Please contact us if you wish to register an acquisition requirement or to market a property with us:</p>
+<a href=\"mailto:commercial@philipsrogers.co.uk\">commercial@philipsrogers.co.uk</a>
+<p>Tel: 01208 812 812</p>",
+    20 => "<p>Philips Rogers offer a full range of building surveying and architectural design services.  Services we provide include:</p>
+<ul>
+<li>Planning & Development</li>
+<li>Design & Specification</li>
+<li>Contract Administration</li>
+<li>Project Management</li>
+<li>Dilapidations</li>
+<li>Party Wall Advice</li>
+<li>Survey & Defect Diagnosis</li>
+<li>Expert Witness</li>
+</li>"
+,
+    30 => "<p>Philips Rogers Ltd. was established in 2017 by Phil Wiltshire following 24 years of employment in the construction and property industry working throughout the UK, but predominantly in London, Cornwall and Devon.</p>
+<p>Philips Rogers offers a unique combination of professional surveying and property development expertise coupled with a deep understanding of Cornwall and Devon commercial market conditions.  This combination enables us to identify and add significant value to development opportunities, whether acting in a professional capacity as chartered building surveyors or as commercial estate agents.</p>
+<p>Philips Rogers also provide property management services for clients who require assistance in meeting legislative compliance with their portfolios or who are perhaps too busy or geographically remote from properties to effectively manage them on a day to day basis.</p>
+<h2>Areas we Cover</h2>
+<p>Philips Rogers are based in Wadebridge on the Camel Estuary in North Cornwall.  Being based in Wadebridge, we are able to cost effectively provide professional and agency services to many of the surrounding towns and villages as well as being close to the A30 and A39, enabling us to cover most of Cornwall and Devon with ease.</p>",
+    40 => "Careers at Philips Rogers...",
+    50 => "Completed projects...",
+  );
+
   foreach ( $titles as $menu_order => $title ) {
     $parent_pages[$menu_order]['title']   = $title;
-    $parent_pages[$menu_order]['content'] = 'Please add content for ' . $title . '<br/>' . $lorem;
+    $parent_pages[$menu_order]['content'] = $content[$menu_order];
   }
+
   $menu_name = 'PR Main Nav';
   $menu_loc = 'primary_navigation';
   $menu_exists = wp_get_nav_menu_object( $menu_name );
@@ -71,23 +96,19 @@ function pr_add_pages()
       );
       wp_insert_post($page);
 
-      //if ( $content['title'] !== 'About Us' ) {
-        wp_update_nav_menu_item($menu_id, 0, array(
-          'menu-item-title' => $content['title'],
-          'menu-item-object' => 'page',
-          'menu-item-object-id' => get_page_by_path( $slug )->ID,
-          'menu-item-type' => 'post_type',
-          'menu-item-status' => 'publish')
-        );
-      //}
+      wp_update_nav_menu_item($menu_id, 0, array(
+        'menu-item-title' => $content['title'],
+        'menu-item-object' => 'page',
+        'menu-item-object-id' => get_page_by_path( $slug )->ID,
+        'menu-item-type' => 'post_type',
+        'menu-item-status' => 'publish')
+      );
     }
   }
 
-  // Set About as the home page and case studies as the posts page.
+  // Set About as the home page.
   // Use a static front page
   $about = get_page_by_title( 'About Us' );
   update_option( 'page_on_front', $about->ID );
   update_option( 'show_on_front', 'page' );
-
-  // Add pages to primary Nav
 }
