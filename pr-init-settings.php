@@ -37,7 +37,7 @@ function pr_add_pages()
   $parent_pages = array();
   // menu order => title
   $titles = array(
-    10  => 'Propery Search',
+    10  => 'Property Search',
     20  => 'Building Surveying',
     30  => 'About Us',
     40  => 'Careers',
