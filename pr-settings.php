@@ -2,7 +2,8 @@
 /*
 Plugin Name: Philips Rogers setup
 Description: Provides default settings and pages for PR.
-Author: Katja Mordaunt
+Author: katjam
+Version: 2.0.0
  */
 
 define('PR_PATH', plugin_dir_path(__FILE__));
