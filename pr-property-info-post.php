@@ -1,11 +1,4 @@
 <?php
-
-/*
-Plugin Name: PR Property Listing Post Type
-Version: 0.0.0
-Description: PR property listing post type.
-*/
-
 add_action( 'init', 'create_property_listing_post_type' );
 
 function create_property_listing_post_type() {
@@ -13,7 +6,7 @@ function create_property_listing_post_type() {
     'property_listing', [
       'labels' => ['name' => __('Properties'), 'singular_name' => __('Property')],
       'public' => true,
-      'has_archive' => true,
+      'has_archive' => false,
       'register_meta_box_cb' => 'pr_property_listing_meta_boxes',
       'rewrite' => ['slug' => 'commercial-property'],
       'supports' => array('title', 'editor', 'excerpt', 'revisions', 'thumbnail'),
