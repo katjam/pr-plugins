@@ -44,25 +44,28 @@ function pr_property_listing_meta_boxes() {
 function pr_property_details_form() {
     wp_nonce_field(plugin_basename(__FILE__), 'pr_property_details_nonce');
     $details = get_post_meta( get_the_ID(), 'pr_property_details', true );
-    $html = '<div style="padding: 10px; width: 150px;">';
-    $html .= '<label for="details_name">Property Name </label>';
-    $html .= '<input type="text" id="detail_name" name="pr_property_details[name]" size="80" value="" />';
-    $html .= '</div><div style="padding: 10px; width: 150px">';
-    $html .= '<label for="details_address">Property Address </label>';
-    $html .= '<textarea id="detail_address" name="pr_property_details[address]" rows="5" cols="60" value="" ></textarea>';
-    $html .= '</div><div style="padding: 10px; width: 150px">';
-    $html .= '<label for="details_size">Property Size </label>';
-    $html .= '<input type="text" id="detail_size" name="pr_property_details[size]" size="80" value="" />';
-    $html .= '</div><div style="padding: 10px; width: 150px;">';
-    $html .= '<label for="details_price">Property Price </label>';
-    $html .= '<input type="text" id="detail_price" name="pr_property_details[price]" size="80" value="" />';
-    $html .= '</div><div style="padding: 10px; width: 150px;">';
-    $html .= '<label for="details_location">Property Location </label>';
-    $html .= '<input type="text" id="details_location" name="pr_property_details[location]" size="80" value="" />';
-    $html .= '</div>';
-
-    echo $html;
-}
+?>
+    <div style="padding: 10px; width: 150px;">
+      <label for="details_name">Property Type </label>
+      <input type="text" id="detail_type" name="pr_property_details[type]" size="80" value="<?= $details["type"] ?>" />
+    </div>
+    <div style="padding: 10px; width: 150px">
+      <label for="details_address">Property Address </label>
+      <textarea id="detail_address" name="pr_property_details[address]" rows="5" cols="60" ><?= $details["address"] ?></textarea>
+    </div>
+    <div style="padding: 10px; width: 150px">
+      <label for="details_size">Property Size </label>
+      <input type="text" id="detail_size" name="pr_property_details[size]" size="80" value="<?= $details["size"] ?>" />
+    </div>
+    <div style="padding: 10px; width: 150px;">
+      <label for="details_price">Property Price </label>
+      <input type="text" id="detail_price" name="pr_property_details[price]" size="80" value="<?= $details["price"] ?>" />
+    </div>
+    <div style="padding: 10px; width: 150px;">
+      <label for="details_highlights">Property Highlights </label>
+      <input type="text" id="details_highlights" name="pr_property_details[highlights]" size="80" value="<?= $details["highlights"] ?>" />
+    </div>
+<?php }
 
 function pr_property_pdf_form() {
     wp_nonce_field(plugin_basename(__FILE__), 'pr_property_pdf_nonce');
@@ -108,6 +111,7 @@ function save_custom_meta_data($id) {
         $uploaded_type = $arr_file_type['type'];
 
         if(in_array($uploaded_type, $supported_types)) {
+            // Todo Delete the old one
             $upload = wp_upload_bits($_FILES['pr_property_pdf']['name'], null, file_get_contents($_FILES['pr_property_pdf']['tmp_name']));
             if(isset($upload['error']) && $upload['error'] != 0) {
                 wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
@@ -125,7 +129,7 @@ function save_custom_meta_data($id) {
     }
     if ( isset ($_REQUEST['pr_property_details'] )) {
         if (!isset($_POST['pr_property_details_nonce']) || !wp_verify_nonce($_POST['pr_property_details_nonce'], plugin_basename(__FILE__))) {return;}
-        update_post_meta($id, 'pr_property_details', sanitize_text_field( $_POST['pr_property_details']));
+        update_post_meta($id, 'pr_property_details',  $_POST['pr_property_details']);
     }
 }
 
