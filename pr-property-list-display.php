@@ -41,7 +41,9 @@ function pr_display_property_teasers_meta_save( $post_id ) {
         return;
     }
 
+    if ($_POST && array_key_exists('pr_property_teasers', $_POST)) {
     update_post_meta( $post_id, 'pr_property_teasers', $_POST['pr_property_teasers'] );
+    }
 }
 
 add_action( 'save_post', 'pr_display_property_teasers_meta_save' );

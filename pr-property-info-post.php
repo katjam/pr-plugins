@@ -39,6 +39,13 @@ function pr_property_listing_meta_boxes() {
     null,
     'side',
   );
+  add_meta_box(
+    'pr_property_disposal',
+    'Property Disposal Type',
+    'pr_property_listing_disposal',
+    null,
+    'side',
+  );
 }
 
 function pr_property_details_form() {
@@ -64,6 +71,10 @@ function pr_property_details_form() {
     <div style="padding: 10px; width: 150px;">
       <label for="details_highlights">Property Highlights </label>
       <input type="text" id="details_highlights" name="pr_property_details[highlights]" size="80" value="<?= $details["highlights"] ?>" />
+    </div>
+    <div style="padding: 10px; width: 150px;">
+      <label for="details_teaser">Property Teaser </label>
+      <input type="text" id="details_teaser" name="pr_property_details[teaser]" size="80" value="<?= $details["teaser"] ?>" />
     </div>
 <?php }
 
@@ -100,6 +111,24 @@ function pr_property_listing_status() {
     echo $html;
 }
 
+function pr_property_listing_disposal() {
+    wp_nonce_field(plugin_basename(__FILE__), 'pr_property_disposal_type_nonce');
+    $disposal_types = ['For Sale', 'To Let'];
+    $saved_type = get_post_meta( get_the_ID(), 'pr_property_disposal_type', true );
+    $disposal_type = $saved_type ? $saved_type : '';
+    $html = '<p class="description">';
+    $html .= 'Select a type of disposal';
+    $html .= '</p><ul>';
+    foreach ($disposal_types as $i => $t) {
+      $ckd = $t === $disposal_type ? 'checked' : '';
+      $html .= '<li>';
+      $html .= '<input type="radio" id="disposal_'.$i.'" name="pr_property_disposal_type" value="'.$t.'"'.$ckd.'>';
+      $html .= '<label for="disposal_'.$i.'">'.$t.'</label>';
+      $html .= '</li>';
+    }
+    $html .= '</ul>';
+    echo $html;
+}
 
 add_action('save_post', 'save_custom_meta_data');
 function save_custom_meta_data($id) {
@@ -127,6 +156,11 @@ function save_custom_meta_data($id) {
         if (!isset($_POST['pr_property_listing_status_nonce']) || !wp_verify_nonce($_POST['pr_property_listing_status_nonce'], plugin_basename(__FILE__))) {return;}
         update_post_meta($id, 'pr_property_listing_status', sanitize_text_field( $_POST['pr_property_listing_status']));
     }
+    if ( isset ($_REQUEST['pr_property_disposal_type'] )) {
+        if (!isset($_POST['pr_property_disposal_type_nonce']) || !wp_verify_nonce($_POST['pr_property_disposal_type_nonce'], plugin_basename(__FILE__))) {return;}
+        update_post_meta($id, 'pr_property_disposal_type', sanitize_text_field( $_POST['pr_property_disposal_type']));
+    }
+
     if ( isset ($_REQUEST['pr_property_details'] )) {
         if (!isset($_POST['pr_property_details_nonce']) || !wp_verify_nonce($_POST['pr_property_details_nonce'], plugin_basename(__FILE__))) {return;}
         update_post_meta($id, 'pr_property_details',  $_POST['pr_property_details']);
