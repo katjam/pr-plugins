@@ -54,27 +54,27 @@ function pr_property_details_form() {
 ?>
     <div style="padding: 10px; width: 150px;">
       <label for="details_name">Property Type </label>
-      <input type="text" id="detail_type" name="pr_property_details[type]" size="80" value="<?= $details["type"] ?>" />
+      <input type="text" id="detail_type" name="pr_property_details[type]" size="80" value="<?= isset($details["type"]) ? $details["type"] : '' ?>" />
     </div>
     <div style="padding: 10px; width: 150px">
       <label for="details_address">Property Address </label>
-      <textarea id="detail_address" name="pr_property_details[address]" rows="5" cols="60" ><?= $details["address"] ?></textarea>
+      <textarea id="detail_address" name="pr_property_details[address]" rows="5" cols="60" ><?= isset($details["address"]) ? $details["address"] : '' ?></textarea>
     </div>
     <div style="padding: 10px; width: 150px">
       <label for="details_size">Property Size </label>
-      <input type="text" id="detail_size" name="pr_property_details[size]" size="80" value="<?= $details["size"] ?>" />
+      <input type="text" id="detail_size" name="pr_property_details[size]" size="80" value="<?= isset($details["size"]) ? $details["size"] : '' ?>" />
     </div>
     <div style="padding: 10px; width: 150px;">
       <label for="details_price">Property Price </label>
-      <input type="text" id="detail_price" name="pr_property_details[price]" size="80" value="<?= $details["price"] ?>" />
+      <input type="text" id="detail_price" name="pr_property_details[price]" size="80" value="<?= isset($details["price"]) ? $details["price"] : '' ?>" />
     </div>
     <div style="padding: 10px; width: 150px;">
       <label for="details_highlights">Property Highlights </label>
-      <input type="text" id="details_highlights" name="pr_property_details[highlights]" size="80" value="<?= $details["highlights"] ?>" />
+      <input type="text" id="details_highlights" name="pr_property_details[highlights]" size="80" value="<?= isset($details["highlights"]) ? $details["highlights"] : '' ?>" />
     </div>
     <div style="padding: 10px; width: 150px;">
       <label for="details_teaser">Property Teaser </label>
-      <input type="text" id="details_teaser" name="pr_property_details[teaser]" size="80" value="<?= $details["teaser"] ?>" />
+      <input type="text" id="details_teaser" name="pr_property_details[teaser]" size="80" value="<?= isset($details["teaser"]) ? $details["teaser"] : '' ?>" />
     </div>
 <?php }
 
