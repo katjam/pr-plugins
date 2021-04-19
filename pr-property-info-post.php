@@ -14,6 +14,49 @@ function create_property_listing_post_type() {
   );
 }
 
+add_filter( 'default_content', 'default_listing_text', 10, 2 );
+
+function default_listing_text($content, $post) {
+  $blank_property =
+    "<h4>Description</h4>
+
+
+<h4>Accommodation</h4>
+
+
+<h4>Legal Costs</h4>
+
+
+<h4>Price</h4>
+
+
+<h4>Terms</h4>
+
+
+<h4>Business Rates</h4>
+
+
+<h4>VAT</h4>
+The property is elected for VAT and as such VAT will be chargeable on the rent.
+
+<h4>Subject to Contract</h4>
+This brochure is for guidance purposes only and does not constitute an offer or contract. All descriptions, particulars and dimensions stated are understood to be correct, but prospective purchasers or tenants must satisfy themselves that the information is correct and not rely on the information if entering into a contract or incurring expenses.
+
+<h4>Viewing Arrangements</h4>
+Viewings are by appointment only. Contact Phil Wiltshire BSc(Hons) MRICS on:
+01208 812 812
+";
+  switch( $post->post_type) {
+    case 'property_listing':
+        $content = $blank_property;
+    break;
+    default:
+        $content = '';
+    break;
+  }
+  return $content;
+}
+
 function pr_property_listing_meta_boxes() {
   // https://developer.wordpress.org/reference/functions/add_meta_box/
   add_meta_box(
