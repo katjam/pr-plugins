@@ -45,6 +45,8 @@ This brochure is for guidance purposes only and does not constitute an offer or 
 <h4>Viewing Arrangements</h4>
 Viewings are by appointment only. Contact Phil Wiltshire BSc(Hons) MRICS on:
 01208 812 812
+
+For full details please download the PDF Brochure, which also contains some useful links.
 ";
   switch( $post->post_type) {
     case 'property_listing':
