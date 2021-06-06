@@ -114,13 +114,19 @@ function pr_property_details_form() {
       <input type="text" id="detail_price" name="pr_property_details[price]" size="80" value="<?= isset($details["price"]) ? $details["price"] : '' ?>" />
     </div>
     <div style="padding: 10px; width: 150px;">
-      <label for="details_highlights">Property Highlights </label>
+      <label for="details_highlights">Property Highlight </label>
       <input type="text" id="details_highlights" name="pr_property_details[highlights]" size="80" value="<?= isset($details["highlights"]) ? $details["highlights"] : '' ?>" />
     </div>
     <div style="padding: 10px; width: 150px;">
-      <label for="details_teaser">Property Teaser </label>
-      <input type="text" id="details_teaser" name="pr_property_details[teaser]" size="80" value="<?= isset($details["teaser"]) ? $details["teaser"] : '' ?>" />
+      <label for="details_highlights2">Property Highlight </label>
+      <input type="text" id="details_highlights2" name="pr_property_details[highlights2]" size="80" value="<?= isset($details["highlights2"]) ? $details["highlights2"] : '' ?>" />
     </div>
+    <div style="padding: 10px; width: 150px;">
+      <label for="details_teaser">Property Teaser</label>
+      <input type="text" id="details_teaser" name="pr_property_details[teaser]" size="80" value="<?= isset($details["teaser"]) ? $details["teaser"] : '' ?>" />
+    <span>NOTE: Displayed in list of properties. Not displayed on single property.</span>
+    </div>
+
 <?php }
 
 function pr_property_pdf_form() {
