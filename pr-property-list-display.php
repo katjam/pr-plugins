@@ -51,13 +51,13 @@ function pr_display_property_teasers_meta_save( $post_id ) {
     if ($_POST && array_key_exists('pr_current_listing', $_POST)) {
       update_post_meta( $post_id, 'pr_current_listing', $_POST['pr_current_listing'] );
     } else {
-      delete_post_meta_by_key('pr_current_listing');
+      delete_post_meta($post_id, 'pr_current_listing');
     }
 
     if ($_POST && array_key_exists('pr_completed_listing', $_POST)) {
       update_post_meta( $post_id, 'pr_completed_listing', $_POST['pr_completed_listing'] );
     } else {
-      delete_post_meta_by_key('pr_completed_listing');
+      delete_post_meta($post_id, 'pr_completed_listing');
     }
 }
 
