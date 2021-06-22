@@ -19,10 +19,17 @@ add_action( 'add_meta_boxes', 'pr_metabox_display_property_teasers' );
 function pr_property_teasers() {
   global $post; // The current post
   wp_nonce_field( basename( __FILE__ ), 'pr_nonce' );
-  $pr_display_property_listings = get_post_meta( $post->ID, 'pr_property_teasers', true);
-  $isChecked = $pr_display_property_listings === 'on' ? true : false;
+  $pr_current_listings = get_post_meta( $post->ID, 'pr_current_listing', true);
+  $pr_completed_listings = get_post_meta( $post->ID, 'pr_completed_listing', true);
+  $currentChecked = $pr_current_listings === 'on' ? true : false;
+  $completedChecked = $pr_completed_listings === 'on' ? true : false;
 ?>
-  <input type="checkbox" name="pr_property_teasers" <?php if ($isChecked) echo "checked"; ?> /><strong>Display property listings</strong> on this page.
+  <div>
+    <input type="checkbox" name="pr_current_listing" <?php if ($currentChecked) echo "checked"; ?> />Display <strong>current</strong> property listings
+  </div>
+  <div>
+    <input type="checkbox" name="pr_completed_listing" <?php if ($completedChecked) echo "checked"; ?> />Display <strong>completed</strong> property listings
+  </div>
 <?php }
 
 /**
@@ -41,10 +48,20 @@ function pr_display_property_teasers_meta_save( $post_id ) {
         return;
     }
 
-    if ($_POST && array_key_exists('pr_property_teasers', $_POST)) {
-    update_post_meta( $post_id, 'pr_property_teasers', $_POST['pr_property_teasers'] );
+    // Temp hack to delete old meta key data
+    delete_post_meta_by_key('pr_property_teasers');
+
+    if ($_POST && array_key_exists('pr_current_listing', $_POST)) {
+      update_post_meta( $post_id, 'pr_current_listing', $_POST['pr_current_listing'] );
+    } else {
+      delete_post_meta_by_key('pr_current_listing');
+    }
+
+    if ($_POST && array_key_exists('pr_completed_listing', $_POST)) {
+      update_post_meta( $post_id, 'pr_completed_listing', $_POST['pr_completed_listing'] );
+    } else {
+      delete_post_meta_by_key('pr_completed_listing');
     }
 }
 
 add_action( 'save_post', 'pr_display_property_teasers_meta_save' );
-

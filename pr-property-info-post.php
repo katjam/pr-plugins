@@ -78,6 +78,13 @@ function pr_property_listing_meta_boxes() {
     'high'
   );
   add_meta_box(
+    'pr_property_display_as',
+    'Property Display As',
+    'pr_property_listing_display_as',
+    null,
+    'side',
+  );
+  add_meta_box(
     'pr_property_status',
     'Property Status',
     'pr_property_listing_status',
@@ -143,6 +150,25 @@ function pr_property_pdf_form() {
     echo $html;
 }
 
+function pr_property_listing_display_as() {
+    wp_nonce_field(plugin_basename(__FILE__), 'pr_property_display_as_nonce');
+    $display_as_options = ['Not listed', 'Current', 'Completed'];
+    $saved_display_as = get_post_meta( get_the_ID(), 'pr_property_display_as', true );
+    $display_as = $saved_display_as ? $saved_display_as : 'Not listed';
+    $html = '<p class="description">';
+    $html .= 'Select listing to display property in';
+    $html .= '</p><ul>';
+    foreach ($display_as_options as $i => $t) {
+      $ckd = $t === $display_as ? 'checked' : '';
+      $html .= '<li>';
+      $html .= '<input type="radio" id="display_as'.$i.'" name="pr_property_display_as" value="'.$t.'"'.$ckd.'>';
+      $html .= '<label for="display_as'.$i.'">'.$t.'</label>';
+      $html .= '</li>';
+    }
+    $html .= '</ul>';
+    echo $html;
+}
+
 function pr_property_listing_status() {
     wp_nonce_field(plugin_basename(__FILE__), 'pr_property_listing_status_nonce');
     $statuses = ['None', 'Sold STC', 'Under Offer', 'Let STC', 'Let Agreed', 'Sold'];
@@ -202,6 +228,10 @@ function save_custom_meta_data($id) {
         else {
             wp_die("The file type that you've uploaded is not a PDF.");
         }
+    }
+    if ( isset ($_REQUEST['pr_property_display_as'] )) {
+        if (!isset($_POST['pr_property_display_as_nonce']) || !wp_verify_nonce($_POST['pr_property_display_as_nonce'], plugin_basename(__FILE__))) {return;}
+        update_post_meta($id, 'pr_property_display_as',  sanitize_text_field($_POST['pr_property_display_as']));
     }
     if ( isset ($_REQUEST['pr_property_listing_status'] )) {
         if (!isset($_POST['pr_property_listing_status_nonce']) || !wp_verify_nonce($_POST['pr_property_listing_status_nonce'], plugin_basename(__FILE__))) {return;}
