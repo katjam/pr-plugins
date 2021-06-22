@@ -152,16 +152,16 @@ function pr_property_pdf_form() {
 
 function pr_property_listing_display_as() {
     wp_nonce_field(plugin_basename(__FILE__), 'pr_property_display_as_nonce');
-    $display_as_options = ['Current', 'Completed'];
-    $saved_types = unserialize(get_post_meta( get_the_ID(), 'pr_property_display_as', true ));
-    $display_as = $saved_types ? $saved_types : [''];
+    $display_as_options = ['Not listed', 'Current', 'Completed'];
+    $saved_display_as = get_post_meta( get_the_ID(), 'pr_property_display_as', true );
+    $display_as = $saved_display_as ? $saved_display_as : 'Not listed';
     $html = '<p class="description">';
-    $html .= 'Select listing to display in';
+    $html .= 'Select listing to display property in';
     $html .= '</p><ul>';
     foreach ($display_as_options as $i => $t) {
-      $ckd = in_array($t, $display_as) ? 'checked' : '';
+      $ckd = $t === $display_as ? 'checked' : '';
       $html .= '<li>';
-      $html .= '<input type="checkbox" id="display_as'.$i.'" name="pr_property_display_as[]" value="'.$t.'"'.$ckd.'>';
+      $html .= '<input type="radio" id="display_as'.$i.'" name="pr_property_display_as" value="'.$t.'"'.$ckd.'>';
       $html .= '<label for="display_as'.$i.'">'.$t.'</label>';
       $html .= '</li>';
     }
@@ -231,7 +231,7 @@ function save_custom_meta_data($id) {
     }
     if ( isset ($_REQUEST['pr_property_display_as'] )) {
         if (!isset($_POST['pr_property_display_as_nonce']) || !wp_verify_nonce($_POST['pr_property_display_as_nonce'], plugin_basename(__FILE__))) {return;}
-        update_post_meta($id, 'pr_property_display_as',  serialize($_POST['pr_property_display_as']));
+        update_post_meta($id, 'pr_property_display_as',  sanitize_text_field($_POST['pr_property_display_as']));
     }
     if ( isset ($_REQUEST['pr_property_listing_status'] )) {
         if (!isset($_POST['pr_property_listing_status_nonce']) || !wp_verify_nonce($_POST['pr_property_listing_status_nonce'], plugin_basename(__FILE__))) {return;}
