@@ -48,9 +48,6 @@ function pr_display_property_teasers_meta_save( $post_id ) {
         return;
     }
 
-    // Temp hack to delete old meta key data
-    delete_post_meta_by_key('pr_property_teasers');
-
     if ($_POST && array_key_exists('pr_current_listing', $_POST)) {
       update_post_meta( $post_id, 'pr_current_listing', $_POST['pr_current_listing'] );
     } else {
