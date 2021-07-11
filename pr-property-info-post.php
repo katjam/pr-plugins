@@ -9,7 +9,7 @@ function create_property_listing_post_type() {
       'has_archive' => false,
       'register_meta_box_cb' => 'pr_property_listing_meta_boxes',
       'rewrite' => ['slug' => 'commercial-property'],
-      'supports' => array('title', 'editor', 'revisions', 'thumbnail'),
+      'supports' => array('title', 'editor', 'revisions'),
     ]
   );
 }
