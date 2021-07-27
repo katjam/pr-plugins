@@ -259,7 +259,7 @@ function pr_property_help() {
 
     $screen->add_help_tab( array(
         'id' => 'add-gallery',
-        'title' => 'Add a galley',
+        'title' => 'Add a gallery',
         'content' => '<h3>Add a gallery of images to property</h3>
         <p>You can add an unlimited number of images to a property. They will automatically resize to a width of 1100px to be used as the full size display. They will also generate 150px square images for use as thumbnails.</p>
         <ol>
@@ -279,10 +279,10 @@ function pr_property_help() {
 
     $screen->add_help_tab( array(
         'id' => 'edit-gallery',
-        'title' => 'Edit a galley',
+        'title' => 'Edit a gallery',
         'content' => '<h3>Reorder, add, remove images from a property gallery</h3>
         <ol>
-          <li>If the property has a galley you will see a list of image id\'s like [gallery_ids="1,21,3,43"] in the Text tab</li>
+          <li>If the property has a gallery you will see a list of image id\'s like [gallery_ids="1,21,3,43"] in the Text tab</li>
           <li>Select the Visual tab</li>
           <li>Click into the area where the images are displayed
           <li>Click the pencil icon that appears at the top of that area</li>
