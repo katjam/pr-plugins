@@ -248,6 +248,56 @@ function save_custom_meta_data($id) {
     }
 }
 
+function pr_property_help() {
+    global $post_ID;
+    $screen = get_current_screen();
+
+    if( isset($_GET['post_type']) ) $post_type = $_GET['post_type'];
+    else $post_type = get_post_type( $post_ID );
+
+    if( $post_type == 'property_listing' ) :
+
+    $screen->add_help_tab( array(
+        'id' => 'add-gallery',
+        'title' => 'Add a galley',
+        'content' => '<h3>Add a gallery of images to property</h3>
+        <p>You can add an unlimited number of images to a property. They will automatically resize to a width of 1100px to be used as the full size display. They will also generate 150px square images for use as thumbnails.</p>
+        <ol>
+          <li>Click into the text area above the property description</li>
+          <li>Press the "Add Media" button</li>
+          <li>Select "Create gallery" from the list on the left</li>
+          <li>Upload new files or select from existing images in your media library</li>
+          <li>Add alt text to each of the images for better accessibility</li>
+          <li>All images with tick in the top left will be added when you create the gallery</li>
+          <li>Once a gallery is created, you can change the order and remove images</li>
+          <li>The first image in the gallery will be used as the main one for the teaser</li>
+          <li>Press the "Insert gallery" button"</li>
+          <li>You should now see the image id\'s listed in the property text e.g. [gallery ids="111,106,84,70"] </li>
+        </ol>
+        ',
+    ));
+
+    $screen->add_help_tab( array(
+        'id' => 'edit-gallery',
+        'title' => 'Edit a galley',
+        'content' => '<h3>Reorder, add, remove images from a property gallery</h3>
+        <ol>
+          <li>If the property has a galley you will see a list of image id\'s like [gallery_ids="1,21,3,43"] in the Text tab</li>
+          <li>Select the Visual tab</li>
+          <li>Click into the area where the images are displayed
+          <li>Click the pencil icon that appears at the top of that area</li>
+          <li>You should now be able to edit, delete and reorder the images</li>
+          <li>You can also add new images by selecting "Add to gallery" from the menu on the left</li>
+        </ol>
+        ',
+    ));
+
+    endif;
+
+}
+
+add_action('admin_head', 'pr_property_help');
+
 function update_pr_property_listing_edit_form() {
     echo ' enctype="multipart/form-data"';
 }
