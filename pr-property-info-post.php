@@ -183,7 +183,13 @@ function pr_property_pdf_form($pdfId) {
     $filearray = get_post_meta( get_the_ID(), 'pr_property_pdf'.$id, true );
     $this_file = $filearray ? $filearray['url'] : '';
     if($this_file != ""){
-      $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
+    $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
+    $html .= '<div style="padding: 10px; width: 150px;">';
+    $button_text_id = 'pr_property_pdf'.$id.'_button';
+    $button_text = get_post_meta( get_the_ID(), $button_text_id, true );
+    $html .= '<label for="'.$button_text_id.'">Download button text (default Download PDF)</label>';
+    $html .= '<input type="text" id="'.$button_text_id.'" name="pr_property_pdf'.$id.'_button" size="40" value="'.$button_text.'" />';
+    $html .= '</div>';
     }
     echo $html;
 }
@@ -256,7 +262,7 @@ function save_custom_meta_data($id) {
     ];
     foreach ($pdf_ids as $id_string) {
         if(!empty($_FILES[$id_string]['name'])) {
-            if (!isset($_POST[$id_string.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
+            if (!isset($_POST[$id_stringing.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
             $supported_types = array('application/pdf');
             $arr_file_type = wp_check_filetype(basename($_FILES[$id_string]['name']));
             $uploaded_type = $arr_file_type['type'];
@@ -268,11 +274,20 @@ function save_custom_meta_data($id) {
                     wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
                 } else {
                     update_post_meta($id, $id_string, $upload);
+                    $button_text = isset ($_REQUEST[$id_string.'_button'] )
+                        ? $_REQUEST[$id_string.'_button']
+                        : 'Download PDF';
+                    update_post_meta($id, $id_string.'_button', $button_text);
                 }
             }
             else {
                 wp_die("The file type that you've uploaded is not a PDF.");
             }
+        } else {
+            // Maybe just a button text change
+          if (isset ($_REQUEST[$id_string.'_button'] )) {
+              update_post_meta($id, $id_string.'_button', $_REQUEST[$id_string.'_button']);
+          }
         }
     }
     if ( isset ($_REQUEST['pr_property_display_as'] )) {
