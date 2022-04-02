@@ -262,7 +262,7 @@ function save_custom_meta_data($id) {
     ];
     foreach ($pdf_ids as $id_string) {
         if(!empty($_FILES[$id_string]['name'])) {
-            if (!isset($_POST[$id_stringing.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
+            if (!isset($_POST[$id_string.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
             $supported_types = array('application/pdf');
             $arr_file_type = wp_check_filetype(basename($_FILES[$id_string]['name']));
             $uploaded_type = $arr_file_type['type'];
