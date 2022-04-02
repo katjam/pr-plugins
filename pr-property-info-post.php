@@ -71,8 +71,32 @@ function pr_property_listing_meta_boxes() {
   );
   add_meta_box(
     'pr_property_pdf',
-    'Property PDF',
-    'pr_property_pdf_form',
+    'Property PDF 1',
+    'pr_property_pdf_form1',
+    null,
+    'normal',
+    'high'
+  );
+  add_meta_box(
+    'pr_property_pdf2',
+    'Property PDF 2',
+    'pr_property_pdf_form2',
+    null,
+    'normal',
+    'high'
+  );
+  add_meta_box(
+    'pr_property_pdf3',
+    'Property PDF 3',
+    'pr_property_pdf_form3',
+    null,
+    'normal',
+    'high'
+  );
+  add_meta_box(
+    'pr_property_pdf4',
+    'Property PDF 4',
+    'pr_property_pdf_form4',
     null,
     'normal',
     'high'
@@ -136,16 +160,36 @@ function pr_property_details_form() {
 
 <?php }
 
-function pr_property_pdf_form() {
-    wp_nonce_field(plugin_basename(__FILE__), 'pr_property_pdf_nonce');
+function pr_property_pdf_form1() {
+    pr_property_pdf_form(1);
+}
+function pr_property_pdf_form2() {
+    pr_property_pdf_form(2);
+}
+function pr_property_pdf_form3() {
+    pr_property_pdf_form(3);
+}
+function pr_property_pdf_form4() {
+    pr_property_pdf_form(4);
+}
+function pr_property_pdf_form($pdfId) {
+    // keep original pdf field without id appended
+    $id = $pdfId === 1 ? "" : $pdfId;
+    wp_nonce_field(plugin_basename(__FILE__), 'pr_property_pdf'.$id.'_nonce');
     $html = '<p class="description">';
     $html .= 'Upload your PDF here.';
     $html .= '</p>';
-    $html .= '<input type="file" id="pr_property_pdf" name="pr_property_pdf" value="" size="25">';
-    $filearray = get_post_meta( get_the_ID(), 'pr_property_pdf', true );
+    $html .= '<input type="file" id="pr_property_pdf'.$id.'" name="pr_property_pdf'.$id.'" value="" size="25">';
+    $filearray = get_post_meta( get_the_ID(), 'pr_property_pdf'.$id, true );
     $this_file = $filearray ? $filearray['url'] : '';
     if($this_file != ""){
-      $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
+    $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
+    $html .= '<div style="padding: 10px; width: 150px;">';
+    $button_text_id = 'pr_property_pdf'.$id.'_button';
+    $button_text = get_post_meta( get_the_ID(), $button_text_id, true );
+    $html .= '<label for="'.$button_text_id.'">Download button text (default Download PDF)</label>';
+    $html .= '<input type="text" id="'.$button_text_id.'" name="pr_property_pdf'.$id.'_button" size="40" value="'.$button_text.'" />';
+    $html .= '</div>';
     }
     echo $html;
 }
@@ -210,23 +254,40 @@ function pr_property_listing_disposal() {
 add_action('save_post', 'save_custom_meta_data');
 function save_custom_meta_data($id) {
     if (!current_user_can('edit_post', $id)) {return;}
-    if(!empty($_FILES['pr_property_pdf']['name'])) {
-        if (!isset($_POST['pr_property_pdf_nonce']) || !wp_verify_nonce($_POST['pr_property_pdf_nonce'], plugin_basename(__FILE__))) {return;}
-        $supported_types = array('application/pdf');
-        $arr_file_type = wp_check_filetype(basename($_FILES['pr_property_pdf']['name']));
-        $uploaded_type = $arr_file_type['type'];
+    $pdf_ids = [
+        'pr_property_pdf',
+        'pr_property_pdf2',
+        'pr_property_pdf3',
+        'pr_property_pdf4'
+    ];
+    foreach ($pdf_ids as $id_string) {
+        if(!empty($_FILES[$id_string]['name'])) {
+            if (!isset($_POST[$id_stringing.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
+            $supported_types = array('application/pdf');
+            $arr_file_type = wp_check_filetype(basename($_FILES[$id_string]['name']));
+            $uploaded_type = $arr_file_type['type'];
 
-        if(in_array($uploaded_type, $supported_types)) {
-            // Todo Delete the old one
-            $upload = wp_upload_bits($_FILES['pr_property_pdf']['name'], null, file_get_contents($_FILES['pr_property_pdf']['tmp_name']));
-            if(isset($upload['error']) && $upload['error'] != 0) {
-                wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
-            } else {
-                update_post_meta($id, 'pr_property_pdf', $upload);
+            if(in_array($uploaded_type, $supported_types)) {
+                // Todo Delete the old ones
+                $upload = wp_upload_bits($_FILES[$id_string]['name'], null, file_get_contents($_FILES[$id_string]['tmp_name']));
+                if(isset($upload['error']) && $upload['error'] != 0) {
+                    wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
+                } else {
+                    update_post_meta($id, $id_string, $upload);
+                    $button_text = isset ($_REQUEST[$id_string.'_button'] )
+                        ? $_REQUEST[$id_string.'_button']
+                        : 'Download PDF';
+                    update_post_meta($id, $id_string.'_button', $button_text);
+                }
             }
-        }
-        else {
-            wp_die("The file type that you've uploaded is not a PDF.");
+            else {
+                wp_die("The file type that you've uploaded is not a PDF.");
+            }
+        } else {
+            // Maybe just a button text change
+          if (isset ($_REQUEST[$id_string.'_button'] )) {
+              update_post_meta($id, $id_string.'_button', $_REQUEST[$id_string.'_button']);
+          }
         }
     }
     if ( isset ($_REQUEST['pr_property_display_as'] )) {
