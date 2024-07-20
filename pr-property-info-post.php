@@ -183,13 +183,13 @@ function pr_property_pdf_form($pdfId) {
     $filearray = get_post_meta( get_the_ID(), 'pr_property_pdf'.$id, true );
     $this_file = $filearray ? $filearray['url'] : '';
     if($this_file != ""){
-    $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
-    $html .= '<div style="padding: 10px; width: 150px;">';
-    $button_text_id = 'pr_property_pdf'.$id.'_button';
-    $button_text = get_post_meta( get_the_ID(), $button_text_id, true );
-    $html .= '<label for="'.$button_text_id.'">Download button text (default Download PDF)</label>';
-    $html .= '<input type="text" id="'.$button_text_id.'" name="pr_property_pdf'.$id.'_button" size="40" value="'.$button_text.'" />';
-    $html .= '</div>';
+        $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
+        $html .= '<div style="padding: 10px; width: 150px;">';
+        $button_text_id = 'pr_property_pdf'.$id.'_button';
+        $button_text = get_post_meta( get_the_ID(), $button_text_id, true );
+        $html .= '<label for="'.$button_text_id.'">Download button text (default Download PDF)</label>';
+        $html .= '<input type="text" id="'.$button_text_id.'" name="pr_property_pdf'.$id.'_button" size="40" value="'.$button_text.'" />';
+        $html .= '</div>';
     }
     echo $html;
 }
@@ -263,12 +263,15 @@ function save_custom_meta_data($id) {
     foreach ($pdf_ids as $id_string) {
         if(!empty($_FILES[$id_string]['name'])) {
             if (!isset($_POST[$id_string.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
+
             $supported_types = array('application/pdf');
             $arr_file_type = wp_check_filetype(basename($_FILES[$id_string]['name']));
             $uploaded_type = $arr_file_type['type'];
 
             if(in_array($uploaded_type, $supported_types)) {
-                // Todo Delete the old ones
+                // Path for old pdf. Delete if upload success
+                $old_pdf_filearray = get_post_meta($id, $id_string, true );
+                $old_filepath = $old_pdf_filearray ? $old_pdf_filearray['file'] : '';
                 $upload = wp_upload_bits($_FILES[$id_string]['name'], null, file_get_contents($_FILES[$id_string]['tmp_name']));
                 if(isset($upload['error']) && $upload['error'] != 0) {
                     wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
@@ -278,6 +281,10 @@ function save_custom_meta_data($id) {
                         ? $_REQUEST[$id_string.'_button']
                         : 'Download PDF';
                     update_post_meta($id, $id_string.'_button', $button_text);
+
+                    if ($old_filepath != "") {
+                        wp_delete_file($old_filepath);
+                    }
                 }
             }
             else {
