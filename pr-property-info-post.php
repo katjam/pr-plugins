@@ -176,21 +176,28 @@ function pr_property_pdf_form($pdfId) {
     // keep original pdf field without id appended
     $id = $pdfId === 1 ? "" : $pdfId;
     wp_nonce_field(plugin_basename(__FILE__), 'pr_property_pdf'.$id.'_nonce');
-    $html = '<p class="description">';
-    $html .= 'Upload your PDF here.';
-    $html .= '</p>';
-    $html .= '<input type="file" id="pr_property_pdf'.$id.'" name="pr_property_pdf'.$id.'" value="" size="25">';
     $filearray = get_post_meta( get_the_ID(), 'pr_property_pdf'.$id, true );
-    $this_file = $filearray ? $filearray['url'] : '';
-    if($this_file != ""){
-        $html .= '<div><b>Warning</b> If saved with new chosen file, the current pdf will be replaced by the new file.<br>CURRENT PDF: <a href="'.$this_file.'" target="_blank">' . $this_file . '</a></div>';
-        $html .= '<div style="padding: 10px; width: 150px;">';
+    $this_file_url = $filearray ? $filearray['url'] : '';
+    $this_file_path = $filearray ? $filearray['file'] : '';
+    $html = "";
+    if($this_file_url != "") {
+      $html .= '<input type="checkbox" id="pr_property_pdf'.$id.'_delete" value="'.$this_file_path.'" name="pr_property_pdf'.$id.'_delete" />';
+      $html .= '<label for="pr_property_pdf'.$id.'_delete">Delete PDF (without replacing)</label>';
+        $html .= '<div>CURRENT PDF: <a href="'.$this_file_url.'" target="_blank">' . $this_file_url . '</a></div>';
         $button_text_id = 'pr_property_pdf'.$id.'_button';
         $button_text = get_post_meta( get_the_ID(), $button_text_id, true );
-        $html .= '<label for="'.$button_text_id.'">Download button text (default Download PDF)</label>';
+        $html .= '<label for="'.$button_text_id.'">Download button text: </label>';
         $html .= '<input type="text" id="'.$button_text_id.'" name="pr_property_pdf'.$id.'_button" size="40" value="'.$button_text.'" />';
-        $html .= '</div>';
     }
+
+    $html .= '<p class="description">';
+    $html .= 'Upload PDF';
+    $html .= '</p>';
+    $html .= '<input type="file" id="pr_property_pdf'.$id.'" name="pr_property_pdf'.$id.'" value="" size="25">';
+    if($this_file_url != ""){
+        $html .= '<div>On save, the current pdf will be replaced by the new file.</div>';
+    }
+
     echo $html;
 }
 
@@ -264,6 +271,7 @@ function save_custom_meta_data($id) {
         if(!empty($_FILES[$id_string]['name'])) {
             if (!isset($_POST[$id_string.'_nonce']) || !wp_verify_nonce($_POST[$id_string.'_nonce'], plugin_basename(__FILE__))) {return;}
 
+
             $supported_types = array('application/pdf');
             $arr_file_type = wp_check_filetype(basename($_FILES[$id_string]['name']));
             $uploaded_type = $arr_file_type['type'];
@@ -291,9 +299,15 @@ function save_custom_meta_data($id) {
                 wp_die("The file type that you've uploaded is not a PDF.");
             }
         } else {
-            // Maybe just a button text change
+          // Maybe just a button text change
           if (isset ($_REQUEST[$id_string.'_button'] )) {
               update_post_meta($id, $id_string.'_button', $_REQUEST[$id_string.'_button']);
+          }
+          // Or a delete without replacing remove button text and old file data
+          if (isset ($_REQUEST[$id_string.'_delete'] )) {
+              wp_delete_file($_REQUEST[$id_string.'_delete']);
+              delete_post_meta($id, $id_string);
+              delete_post_meta($id, $id_string.'_button');
           }
         }
     }
